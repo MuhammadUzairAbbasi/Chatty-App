@@ -5,14 +5,14 @@ import messageRoutes from "./routes/message.route.js";
 import { connectDB } from "./lib/db.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { server, app } from "./lib/socket.js";
 
-const app = express();
 dotenv.config();
 
 const port = process.env.PORT || 3000;
 
 // allow to extract data from req.body
-app.use(express.json({limit:"50mb"}));
+app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.raw());
 app.use(cookieParser());
@@ -26,7 +26,7 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Port Running on port ${port}`);
   connectDB();
 });
