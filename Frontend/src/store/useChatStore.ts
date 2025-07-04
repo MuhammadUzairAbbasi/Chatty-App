@@ -11,10 +11,11 @@ interface ChatStore {
 
   getUser: () => Promise<void>;
   getmessages: (userId: any) => Promise<void>;
+  sendmessage: (data: any) => Promise<void>;
   setselectedUser: (selectedUser: any) => void;
 }
 
-export const useChatStore = create<ChatStore>((set) => ({
+export const useChatStore = create<ChatStore>((set, get) => ({
   messages: [],
   users: [],
   selectedUser: null,
@@ -43,6 +44,23 @@ export const useChatStore = create<ChatStore>((set) => ({
       set({ isMessageLoading: false });
     }
   },
+  sendmessage: async (data: any) => {
+    const { messages, selectedUser } = get();
+    try {
+      console.log(data);
+
+      const res = await axiosInstance.post(
+        `/messages/send/${selectedUser._id}`,
+        data
+      );
+      console.log(res);
+
+      set({ messages: [...messages, res.data] });
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+    }
+  },
+
   // Optimie later
   setselectedUser: (selectedUser: any) => set({ selectedUser }),
 }));

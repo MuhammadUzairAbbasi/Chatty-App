@@ -27,7 +27,7 @@ const Sidebar = () => {
         {/* // Todo online filter option */}
       </div>
 
-      <div className="overflow-y-auto w-full py-3">
+      <div className="overflow-y-auto w-full p-2 space-y-2">
         {users.map((user: any) => {
           return (
             <button
