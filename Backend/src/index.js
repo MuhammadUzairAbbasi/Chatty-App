@@ -6,10 +6,13 @@ import { connectDB } from "./lib/db.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { server, app } from "./lib/socket.js";
+import path from "path";
 
 dotenv.config();
 
 const port = process.env.PORT || 3000;
+
+const __dirname = path.resolve();
 
 // allow to extract data from req.body
 app.use(express.json({ limit: "50mb" }));
@@ -25,6 +28,14 @@ app.use(
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
+
+if (process.env.NODE_ENV === "Production") {
+  app.use(express.static(__dirname, "../frontend/dist"));
+
+  app.get("*", (req, res) => {
+    res.sendFile(__dirname, "../frontend", "dist", "index.html");
+  });
+}
 
 server.listen(port, () => {
   console.log(`Port Running on port ${port}`);
